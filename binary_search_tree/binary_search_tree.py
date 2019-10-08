@@ -2,15 +2,15 @@ import sys
 #sys.path.append('../queue_and_stack')
 #from dll_queue import Queue
 #from dll_stack import Stack
-
+from typing import Callable, Any, List
 
 class BinarySearchTree:
-    def __init__(self, value):
+    def __init__(self, value: int) -> None:
         self.value = value
         self.left = None
         self.right = None
 
-    def insert(self, value):
+    def insert(self, value: int) -> None:
         # Insert the given value into the tree
         if value < self.value:
             if self.left:
@@ -26,7 +26,7 @@ class BinarySearchTree:
             pass
         pass
 
-    def contains(self, target):
+    def contains(self, target: int) -> bool:
         # Return True if the tree contains the value
         # False if it does not
         if target == self.value:
@@ -42,14 +42,14 @@ class BinarySearchTree:
             else:
                 return False
            
-    def get_max(self):
+    def get_max(self) -> int:
         # Return the maximum value found in the tree
         if self.right:
             return self.right.get_max()
         else:
             return self.value
 
-    def for_each(self, cb):
+    def for_each(self, cb: Callable[[int], Any]):
         # Call the function `cb` on the value of each node
         # You may use a recursive or iterative approach
         cb(self.value)
@@ -58,6 +58,60 @@ class BinarySearchTree:
         if self.right:
             self.right.for_each(cb)
 
+    @property
+    def in_order(self) -> List[int]:
+        """    """
+        flattened = list()
+        if self.left:
+            flattened.extend(self.left.in_order)
+
+        flattened.append(self.value)
+
+        if self.right:
+            flattened.extend(self.right.in_order)
+
+        return flattened
+
+    @property
+    def pre_order(self) -> List[int]:
+        """  """
+        flattened = list()
+        flattened.append(self.value)
+
+        if self.left:
+            flattened.extend(self.left.pre_order)
+        if self.right:
+            flattened.extend(self.right.pre_order)
+
+        return flattened
+
+    @property
+    def post_order(self) -> List[int]:
+        """    """
+        flattened = list()
+        if self.left:
+            flattened.extend(self.left.post_order)
+        if self.right:
+            flattened.extend(self.right.post_order)
+
+        flattened.append(self.value)
+
+        return flattened
+    
+if __name__=='__main__':
+    bst = BinarySearchTree(4)
+    bst.insert(1)
+    bst.insert(2)
+    bst.insert(6)
+    bst.insert(5)
+    bst.insert(4)
+    bst.insert(3)
+
+    print(bst.in_order)
+    print(bst.pre_order)
+    print(bst.post_order)
+
+    """
     # DAY 2 Project -----------------------
 
     # Print all the values in order from low to high
@@ -85,3 +139,4 @@ class BinarySearchTree:
     # Print Post-order recursive DFT
     def post_order_dft(self, node):
         pass
+    """
