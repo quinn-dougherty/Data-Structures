@@ -1,3 +1,5 @@
+from doubly_linked_list import DoublyLinkedList
+
 class LRUCache:
     """
     Our LRUCache class keeps track of the max number of nodes it
@@ -7,6 +9,15 @@ class LRUCache:
     to every node stored in the cache.
     """
     def __init__(self, limit=10):
+        # DLL to store order
+        self.order = DoublyLinkedList()
+        # Dict to store key value pairs
+        self.storage = dict()
+        # current size
+        self.size = 0
+        # limit
+        self.limit=limit
+
         pass
 
     """
@@ -17,8 +28,14 @@ class LRUCache:
     key-value pair doesn't exist in the cache.
     """
     def get(self, key):
-        pass
-
+        # pull the value out of the dict using the key
+        if key in self.storage.keys():
+            node = self.storage[key]
+            self.order.move_to_front(node)
+            return node.value[1]
+        else:
+            # or return None
+            return None
     """
     Adds the given key-value pair to the cache. The newly-
     added pair should be considered the most-recently used
@@ -30,4 +47,27 @@ class LRUCache:
     the newly-specified value.
     """
     def set(self, key, value):
+        # if already exists, overwrite value --
+        if key in self.storage:
+            # update dictionary
+            node = self.storage[key]
+            node.value = (key, value)
+
+            # mark as most recently used -- put it in head of DLL
+            self.order.move_to_front(node)
+            pass
+
+        # if at max capacity dump oldest -- remove from tail
+        if self.size == self.limit:
+            # dump the oldest
+            # remove it from the linked list
+            # remove it from the cache
+            del(self.storage[key])
+            self.order.remove_from_tail()
+            self.size -= 1
+            pass
+        # add a pair to the cache -- add to dict and add it to nodes/dll
+        self.order.add_to_tail((key, value))
+        self.storage[key] = self.order.head
+        self.size += 1
         pass
